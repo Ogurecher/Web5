@@ -3,7 +3,10 @@
     <router-view/>
     <div id="output-textarea">
         <p><span v-html="marked_message"></span></p>
-        <input v-model="message">
+        <form>
+          <textarea v-model="message"></textarea>
+          <button v-on:click.prevent='save'> Save</button>
+        </form>
     </div>
   </div>
 </template>
@@ -21,6 +24,15 @@ export default {
   computed: {
     marked_message: function () {
       return xss(marked(this.message))
+    }
+  },
+  methods: {
+    save: function () {
+      this.$http.post('http://localhost:8081', {
+        message: this.message
+      }).then(function (data) {
+        console.log(data)
+      })
     }
   }
 }
